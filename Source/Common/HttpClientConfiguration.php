@@ -60,6 +60,7 @@ class HttpClientConfiguration {
     // The array must contain the username in index [0], the password in index [1], and you can optionally provide a built-in authentication type in index [2]. 
     // Pass null to disable authentication for a request.
     private $_credentials;
+    private $_debug;
 
     /**
      * Constructor
@@ -72,8 +73,9 @@ class HttpClientConfiguration {
      * @param $timeout integer
      * @param $connection_timeout integer
      * @param $credentials array | NULL
+     * @param $debug boolean
      */
-    function __construct($url = NULL, $method = self::METHOD_GET, $query = [], $data = [], $type = NULL, $headers = [], $timeout = 0, $connection_timeout = 0, $credentials = NULL) {
+    function __construct($url = NULL, $method = self::METHOD_GET, $query = [], $data = [], $type = NULL, $headers = [], $timeout = 0, $connection_timeout = 0, $credentials = NULL, $debug = false) {
 
         $this->setURL($url);
         $this->setMethod($method);
@@ -84,6 +86,7 @@ class HttpClientConfiguration {
         $this->setTimeout($timeout);
         $this->setConnectionTimeout($timeout);
         $this->setCredentials($credentials);
+        $this->setDebug($debug);
     }
 
     /**
@@ -123,6 +126,12 @@ class HttpClientConfiguration {
         // Set response timeout
         if($this->getConnectionTimeout() > 0) {
             $options['connect_timeout'] = $this->getConnectionTimeout();
+        }
+
+        // Set response timeout
+        if($this->getDebug() === true) {
+            $options['debug'] = true;
+            var_dump($options);
         }
 
         return $options;
@@ -300,5 +309,21 @@ class HttpClientConfiguration {
      */
     public function setCredentials($val) {
         $this->_credentials = $val;
+    }
+    
+    /**
+     * Get debug
+     * @return boolean
+     */
+    private function getDebug() {
+        return $this->_debug;
+    }
+    
+    /**
+     * Set debug
+     * @param $val boolean
+     */
+    public function setDebug($val) {
+        $this->_debug = $val;
     }
 }

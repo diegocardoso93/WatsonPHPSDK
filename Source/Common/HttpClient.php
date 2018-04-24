@@ -60,7 +60,7 @@ class HttpClient {
             $message = $e->getMessage();
 
             if ($e->hasResponse()) {
-                $message = Psr7\str($e->getResponse());
+                $message = (string) $e->getResponse()->getBody();
             }
             throw new HttpClientException($message, $e->getCode());
         }
