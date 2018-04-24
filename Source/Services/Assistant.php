@@ -26,6 +26,8 @@ use WatsonSDK\Common\WatsonCredential;
 use WatsonSDK\Common\InvalidParameterException;
 
 use WatsonSDK\Services\Assistant\MessageRequestModel;
+use WatsonSDK\Services\Assistant\WorkspaceRequestModel;
+use WatsonSDK\Services\Assistant\IntentRequestModel;
 
 /**
  * Assistant class
@@ -136,10 +138,186 @@ class Assistant extends WatsonService {
         return $this->sendRequest($config);
     }
 
-    // Create a workspace based on JSON input. 
-    // You must provide JSON data defining the content of the new workspace. 
+    /**
+     * Get workspace associated with a Assistant service instance.
+     *
+     * @return HttpResponse
+     */
+    public function getWorkspace($workspace_id, $export = NULL, $include_audit = NULL, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($export) === FALSE) {
+            $config->addQuery('export', $export);
+        }
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id);
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Create a workspace.
+     * 
+     * @param $workspace WorkspaceRequestModel | string
+     * @return HttpResponse
+     */
     public function createWorkspace($workspace, $version = self::VERSION) {
         
+        if($workspace instanceof WorkspaceRequestModel) {
+            $model = $workspace;
+        } else if(is_string($workspace)) {
+            $model = new WorkspaceRequestModel($workspace);
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        
+        $url = self::BASE_URL."/workspaces";
+        
+        $config->setURL($url);
+        $response = $this->sendRequest($config);
+        
+        return $response;
+    }
+    
+    /**
+     * Update a workspace.
+     *
+     * @param $workspace WorkspaceRequestModel | string
+     * @return HttpResponse
+     */
+    public function updateWorkspace($workspace, $version = self::VERSION) {
+        if($workspace instanceof WorkspaceRequestModel) {
+            $model = $workspace;
+        } else if(is_string($workspace)) {
+            $model = new WorkspaceRequestModel($workspace);
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        
+        $url = self::BASE_URL."/workspaces/".$workspace->getWorkspaceId();
+        
+        $config->setURL($url);
+        $response = $this->sendRequest($config);
+        
+        return $response;
+    }
+    
+    /**
+     * Delete workspace associated with a Assistant service instance.
+     *
+     * @return HttpResponse
+     */
+    public function deleteWorkspace($workspace_id, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_DELETE);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id);
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Create intent.
+     *
+     * @param $intent IntentRequestModel
+     * @return HttpResponse
+     */
+    public function createIntent($intent, $version = self::VERSION) {
+        
+        if($intent instanceof IntentRequestModel) {
+            $model = $intent;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        
+        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents";
+        $config->setURL($url);
+        
+        $response = $this->sendRequest($config);
+        
+        return $response;
+    }
+
+    /**
+     * List the intents associated with a Workspace.
+     *
+     * @return HttpResponse
+     */
+    public function listIntents($workspace_id, $export = NULL, $page_limit = NULL, $include_count = NULL, $sort = NULL, $cursor = NULL, $include_audit = true, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($export) === FALSE && is_integer($export)) {
+            $config->addQuery('export', $export);
+        }
+        
+        if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
+            $config->addQuery('page_limit', $page_limit);
+        }
+        
+        if(is_null($include_count) === FALSE) {
+            $config->addQuery('include_count', $include_count);
+        }
+        
+        if(is_null($sort) === FALSE) {
+            $config->addQuery('sort', $sort);
+        }
+        
+        if(is_null($cursor) === FALSE) {
+            $config->addQuery('cursor', $cursor);
+        }
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/intents");
+        
+        return $this->sendRequest($config);
     }
 
 }

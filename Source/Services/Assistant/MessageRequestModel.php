@@ -20,7 +20,7 @@ namespace WatsonSDK\Services\Assistant;
 use WatsonSDK\Common\ServiceModel;
 
 /**
- * Conversation `send request` model
+ * Assistant `send request` model
  */
 class MessageRequestModel extends ServiceModel {
 

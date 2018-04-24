@@ -20,7 +20,7 @@ namespace WatsonSDK\Services\Assistant;
 use WatsonSDK\Common\ServiceModel;
 
 /**
- * Conversation DialogStack model
+ * Assistant DialogStack model
  */
 class DialogModel extends ServiceModel {
 

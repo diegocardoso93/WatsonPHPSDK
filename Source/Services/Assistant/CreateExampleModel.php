@@ -20,7 +20,7 @@ namespace WatsonSDK\Services\Assistant;
 use WatsonSDK\Common\ServiceModel;
 
 /**
- * Conversation CreateExample model
+ * Assistant CreateExample model
  */
 class CreateExampleModel extends ServiceModel {
 

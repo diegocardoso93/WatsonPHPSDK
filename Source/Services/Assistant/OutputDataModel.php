@@ -20,7 +20,7 @@ namespace WatsonSDK\Services\Assistant;
 use WatsonSDK\Common\ServiceModel;
 
 /**
- * Conversation OutputData model
+ * Assistant OutputData model
  */
 class OutputDataModel extends ServiceModel {
 

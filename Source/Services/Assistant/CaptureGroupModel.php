@@ -20,7 +20,7 @@ namespace WatsonSDK\Services\Assistant;
 use WatsonSDK\Common\ServiceModel;
 
 /**
- * CaptureGroup model
+ * Assistant model
  */
 class CaptureGroupModel extends ServiceModel {
 

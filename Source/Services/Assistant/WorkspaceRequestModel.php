@@ -20,7 +20,7 @@ namespace WatsonSDK\Services\Assistant;
 use WatsonSDK\Common\ServiceModel;
 
 /**
- * Conversation WorkspaceRequest model
+ * Assistant WorkspaceRequest model
  */
 class WorkspaceRequestModel extends ServiceModel {
 
@@ -58,7 +58,7 @@ class WorkspaceRequestModel extends ServiceModel {
      * 
      * Any metadata that is required by the workspace.
      * 
-     * @var array
+     * @var object
      */
     protected $_metadata;
 
@@ -98,7 +98,24 @@ class WorkspaceRequestModel extends ServiceModel {
      */
     protected $_intents;
 
+    /**
+     * @name(learning_opt_out)
+     *
+     * Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
+     *
+     * @var boolean
+     */
+    protected $_learning_opt_out;
 
+    /**
+     * @name(workspace_id)
+     *
+     * Unique identifier of the workspace. (for update purposes)
+     *
+     * @var string
+     */
+    protected $_workspace_id;
+    
     /**
      * Constructor.
      *
@@ -110,17 +127,19 @@ class WorkspaceRequestModel extends ServiceModel {
      * @param array $dialog_nodes
      * @param array $entities
      * @param array $intents
+     * @param boolean $learning_opt_out
      */
-    function __construct($name, $description = '', $language = self::LANGUAGE_ENGLISH, $metadata = [], $counterexamples = [], $dialog_nodes = [], $entities = [], $intents = []) {
+    function __construct($name, $description = '', $language = self::LANGUAGE_ENGLISH, $metadata = NULL, $counterexamples = [], $dialog_nodes = [], $entities = [], $intents = [], $learning_opt_out = true) {
 
         $this->setName($name);
         $this->setDescription($description);
         $this->setLanguage($language);
-        $this->setMetadata($metadata);
+        $this->setMetadata($metadata ? $metadata : new \stdClass);
         $this->setCounterExamples($counterexamples);
         $this->setDialogNodes($dialog_nodes);
         $this->setEntities($entities);
         $this->setIntents($intents);
+        $this->setLearningOptOut($learning_opt_out);
     }
 
     /**
@@ -267,4 +286,39 @@ class WorkspaceRequestModel extends ServiceModel {
         $this->_intents = $val;
     }
 
+    /**
+     * Set LearningOptOut. Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
+     *
+     * @param $val array
+     */
+    public function setLearningOptOut($val) {
+        $this->_learning_opt_out = $val;
+    }
+
+    /**
+     * Get LearningOptOut. Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
+     *
+     * @return array
+     */
+    public function getLearningOptOut() {
+        return $this->_learning_opt_out;
+    }
+
+    /**
+     * Get string of WorkspaceId.
+     *
+     * @return string
+     */
+    public function getWorkspaceId() {
+        return $this->_workspace_id;
+    }
+    
+    /**
+     * Set string of WorkspaceId.
+     *
+     * @param $val string
+     */
+    public function setWorkspaceId($val) {
+        $this->_workspace_id = $val;
+    }
 }

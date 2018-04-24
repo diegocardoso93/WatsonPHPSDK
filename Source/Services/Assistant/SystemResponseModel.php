@@ -20,7 +20,7 @@ namespace WatsonSDK\Services\Assistant;
 use WatsonSDK\Common\ServiceModel;
 
 /**
- * Conversation SystemResponse model
+ * Assistant SystemResponse model
  */
 class SystemResponseModel extends ServiceModel {
 

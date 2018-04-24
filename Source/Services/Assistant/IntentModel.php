@@ -20,7 +20,7 @@ namespace WatsonSDK\Services\Assistant;
 use WatsonSDK\Common\ServiceModel;
 
 /**
- * Conversation Intent model
+ * Assistant Intent model
  */
 class IntentModel extends ServiceModel {
 
