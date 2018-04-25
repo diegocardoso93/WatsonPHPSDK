@@ -28,6 +28,10 @@ use WatsonSDK\Common\InvalidParameterException;
 use WatsonSDK\Services\Assistant\MessageRequestModel;
 use WatsonSDK\Services\Assistant\WorkspaceRequestModel;
 use WatsonSDK\Services\Assistant\IntentRequestModel;
+use WatsonSDK\Services\Assistant\UpdateIntentModel;
+use WatsonSDK\Services\Assistant\CreateIntentModel;
+use WatsonSDK\Services\Assistant\CreateWorkspaceModel;
+use WatsonSDK\Services\Assistant\UpdateWorkspaceModel;
 
 /**
  * Assistant class
@@ -167,15 +171,13 @@ class Assistant extends WatsonService {
     /**
      * Create a workspace.
      * 
-     * @param $workspace WorkspaceRequestModel | string
+     * @param $workspace CreateWorkspaceModel
      * @return HttpResponse
      */
     public function createWorkspace($workspace, $version = self::VERSION) {
         
-        if($workspace instanceof WorkspaceRequestModel) {
+        if($workspace instanceof CreateWorkspaceModel) {
             $model = $workspace;
-        } else if(is_string($workspace)) {
-            $model = new WorkspaceRequestModel($workspace);
         } else {
             throw new InvalidParameterException();
         }
@@ -200,14 +202,12 @@ class Assistant extends WatsonService {
     /**
      * Update a workspace.
      *
-     * @param $workspace WorkspaceRequestModel | string
+     * @param $workspace UpdateWorkspaceModel
      * @return HttpResponse
      */
     public function updateWorkspace($workspace, $version = self::VERSION) {
-        if($workspace instanceof WorkspaceRequestModel) {
+        if($workspace instanceof UpdateWorkspaceModel) {
             $model = $workspace;
-        } else if(is_string($workspace)) {
-            $model = new WorkspaceRequestModel($workspace);
         } else {
             throw new InvalidParameterException();
         }
@@ -246,16 +246,42 @@ class Assistant extends WatsonService {
         
         return $this->sendRequest($config);
     }
-    
+
+    /**
+     * Get intent associated with a workspace.
+     *
+     * @return HttpResponse
+     */
+    public function getIntent($workspace_id, $intent, $export = NULL, $include_audit = NULL, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($export) === FALSE) {
+            $config->addQuery('export', $export);
+        }
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/intents/".$intent);
+        
+        return $this->sendRequest($config);
+    }
+
     /**
      * Create intent.
      *
-     * @param $intent IntentRequestModel
+     * @param $intent CreateIntentModel
      * @return HttpResponse
      */
     public function createIntent($intent, $version = self::VERSION) {
         
-        if($intent instanceof IntentRequestModel) {
+        if($intent instanceof CreateIntentModel) {
             $model = $intent;
         } else {
             throw new InvalidParameterException();
@@ -273,6 +299,37 @@ class Assistant extends WatsonService {
         $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents";
         $config->setURL($url);
         
+        $response = $this->sendRequest($config);
+        
+        return $response;
+    }
+
+    /**
+     * Update a intent.
+     *
+     * @param $workspace UpdateIntentModel
+     * @return HttpResponse
+     */
+    public function updateIntent($intent, $version = self::VERSION) {
+        
+        if($intent instanceof UpdateIntentModel) {
+            $model = $intent;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        
+        $url = self::BASE_URL."/workspaces/".$intent->getWorkspaceId()."/intents/".$model->getIntent();
+        
+        $config->setURL($url);
         $response = $this->sendRequest($config);
         
         return $response;

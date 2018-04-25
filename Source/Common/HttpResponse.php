@@ -86,4 +86,20 @@ class HttpResponse {
     public function getStatusCode() {
         return $this->_status_code;
     }
+    
+    /**
+     * Return intelligible errors
+     *
+     * @return string
+     */
+    public function getErrorAsString() {
+        $content = $this->getContent(true);
+        $error_string = $content['error'];
+        if (isset($content['errors'])) {
+            foreach($content['errors'] as $error) {
+                $error_string .= ', ' . $error['message'];
+            }
+        }
+        return $error_string;
+    }
 }

@@ -75,11 +75,12 @@ class ServiceModel {
                             $key = $name;
                         }
                     }
+
                     if($value instanceof ServiceModel) {
                         $queries[$key] = $value->getData($type, $nullable_data, $nullable_attribute);
                     }
-                    else if($name === 'array' && is_array($value)) {
-                        foreach($sub_value as $value) {
+                    else if(is_array($value)) {
+                        foreach($value as $sub_value) {
                             if($sub_value instanceof ServiceModel) {
                                 $queries[$key][] = $sub_value->getData($type, $nullable_data, $nullable_attribute);
                             }

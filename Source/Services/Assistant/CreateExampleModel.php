@@ -34,6 +34,16 @@ class CreateExampleModel extends ServiceModel {
     protected $_text;
 
     /**
+     * Constructor.
+     *
+     * @param string $text
+     */
+    function __construct($text) {
+        
+        $this->setText($text);
+    }
+
+    /**
      * Get the text of a user input example.
      * 
      * @return string
