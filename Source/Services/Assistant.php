@@ -32,6 +32,8 @@ use WatsonSDK\Services\Assistant\UpdateIntentModel;
 use WatsonSDK\Services\Assistant\CreateIntentModel;
 use WatsonSDK\Services\Assistant\CreateWorkspaceModel;
 use WatsonSDK\Services\Assistant\UpdateWorkspaceModel;
+use WatsonSDK\Services\Assistant\CreateExampleModel;
+use WatsonSDK\Services\Assistant\UpdateExampleModel;
 
 /**
  * Assistant class
@@ -221,7 +223,7 @@ class Assistant extends WatsonService {
         $config->setMethod(HttpClientConfiguration::METHOD_POST);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
         
-        $url = self::BASE_URL."/workspaces/".$workspace->getWorkspaceId();
+        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId();
         
         $config->setURL($url);
         $response = $this->sendRequest($config);
@@ -247,6 +249,50 @@ class Assistant extends WatsonService {
         return $this->sendRequest($config);
     }
 
+    
+    
+    /**
+     * List the intents associated with a Workspace.
+     *
+     * @return HttpResponse
+     */
+    public function listIntents($workspace_id, $export = NULL, $page_limit = NULL, $include_count = NULL, $sort = NULL, $cursor = NULL, $include_audit = true, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($export) === FALSE && is_integer($export)) {
+            $config->addQuery('export', $export);
+        }
+        
+        if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
+            $config->addQuery('page_limit', $page_limit);
+        }
+        
+        if(is_null($include_count) === FALSE) {
+            $config->addQuery('include_count', $include_count);
+        }
+        
+        if(is_null($sort) === FALSE) {
+            $config->addQuery('sort', $sort);
+        }
+        
+        if(is_null($cursor) === FALSE) {
+            $config->addQuery('cursor', $cursor);
+        }
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/intents");
+        
+        return $this->sendRequest($config);
+    }
+    
     /**
      * Get intent associated with a workspace.
      *
@@ -327,7 +373,7 @@ class Assistant extends WatsonService {
         $config->setMethod(HttpClientConfiguration::METHOD_POST);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
         
-        $url = self::BASE_URL."/workspaces/".$intent->getWorkspaceId()."/intents/".$model->getIntent();
+        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents/".$model->getIntent();
         
         $config->setURL($url);
         $response = $this->sendRequest($config);
@@ -336,19 +382,15 @@ class Assistant extends WatsonService {
     }
 
     /**
-     * List the intents associated with a Workspace.
+     * List the examples associated with a Intent.
      *
      * @return HttpResponse
      */
-    public function listIntents($workspace_id, $export = NULL, $page_limit = NULL, $include_count = NULL, $sort = NULL, $cursor = NULL, $include_audit = true, $version = self::VERSION) {
+    public function listExamples($workspace_id, $intent, $page_limit = NULL, $include_count = NULL, $sort = NULL, $cursor = NULL, $include_audit = true, $version = self::VERSION) {
         
         $config = $this->initConfig();
         
         $config->setQuery([ 'version' => $version ]);
-        
-        if(is_null($export) === FALSE && is_integer($export)) {
-            $config->addQuery('export', $export);
-        }
         
         if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
             $config->addQuery('page_limit', $page_limit);
@@ -372,9 +414,92 @@ class Assistant extends WatsonService {
         
         $config->setMethod(HttpClientConfiguration::METHOD_GET);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
-        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/intents");
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/intents/".$intent."/examples");
         
         return $this->sendRequest($config);
     }
-
+    
+    /**
+     * Get example associated with a intent.
+     *
+     * @return HttpResponse
+     */
+    public function getExample($workspace_id, $intent, $text, $include_audit = NULL, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/intents/".$intent."/examples/".$text);
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Create example.
+     *
+     * @param $intent CreateExampleModel
+     * @return HttpResponse
+     */
+    public function createExample($example, $version = self::VERSION) {
+        
+        if($example instanceof CreateExampleModel) {
+            $model = $example;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        
+        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents/".$model->getIntent()."/examples";
+        $config->setURL($url);
+        
+        $response = $this->sendRequest($config);
+        
+        return $response;
+    }
+    
+    /**
+     * Update a example.
+     *
+     * @param $workspace UpdateExampleModel
+     * @return HttpResponse
+     */
+    public function updateExample($example, $version = self::VERSION) {
+        
+        if($example instanceof UpdateExampleModel) {
+            $model = $example;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        
+        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents/".$model->getIntent()."/examples/".$model->getText();
+        
+        $config->setURL($url);
+        $response = $this->sendRequest($config);
+        
+        return $response;
+    }
 }

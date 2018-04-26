@@ -20,9 +20,9 @@ namespace WatsonSDK\Services\Assistant;
 use WatsonSDK\Common\ServiceModel;
 
 /**
- * Assistant CreateExample model
+ * Assistant UpdateExample model
  */
-class CreateExampleModel extends ServiceModel {
+class UpdateExampleModel extends ServiceModel {
 
     /**
      * @name(workspace_id)
@@ -52,15 +52,25 @@ class CreateExampleModel extends ServiceModel {
     protected $_text;
 
     /**
+     * @name(text)
+     *
+     * The new text of a user input example.
+     *
+     * @var string
+     */
+    protected $_new_text;
+
+    /**
      * Constructor.
      *
      * @param string $text
      */
-    function __construct($workspace_id, $intent, $text) {
+    function __construct($workspace_id, $intent, $text, $new_text) {
         
         $this->setWorkspaceId($workspace_id);
         $this->setIntent($intent);
         $this->setText($text);
+        $this->setNewText($new_text);
     }
 
     /**
@@ -116,4 +126,23 @@ class CreateExampleModel extends ServiceModel {
     public function setText($val) {
         $this->_text = $val;
     }
+    
+    /**
+     * Get the new text of a user input example.
+     *
+     * @return string
+     */
+    public function getNewText() {
+        return $this->_new_text;
+    }
+    
+    /**
+     * Set the new text of a user input example.
+     *
+     * @param $val string
+     */
+    public function setNewText($val) {
+        $this->_new_text = $val;
+    }
+
 }
