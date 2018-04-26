@@ -13,7 +13,7 @@ Installing [Composer](http://getcomposer.org) will be easier to manage dependenc
 Run the Composer command to install the latest version of the Watson PHP SDK:
 
 ```shell
-composer require cognitivebuild/watsonphpsdk:dev-master
+composer require sinf/watsonphpsdk
 ```
 
 If the Watson PHP SDK is downloaded from GitHub already, run the update command:
@@ -29,6 +29,7 @@ require 'vendor/autoload.php';
 
 ## Namespaces
 For common use, one of the namespaces of `WatsonCredential` or `SimpleTokenProvider` can be optional, depends on how to invoke the Watson services, and you can reference the classes like so:
+
 ```php
 use WatsonSDK\Common\WatsonCredential;
 use WatsonSDK\Common\SimpleTokenProvider;
@@ -40,10 +41,30 @@ use WatsonSDK\Services\ToneAnalyzer\ToneModel;
 Please [visit our wiki](https://github.com/CognitiveBuild/WatsonPHPSDK/wiki).
 
 ## Services
+* [Assistant](#assistant)
 * [Tone Analyzer](#tone-analyzer)
 * [Natural Language Classifier](#natural-language-classifier)
 * [Natural Language Understanding](#natural-language-understanding)
 * [Personality Insights](#personality-insights)
+
+## Assistant
+Watson Assistant is an enterprise artificial intelligence (AI) assistant that helps businesses enhance brand loyalty and transform their customer experiences by delivering proactive and personalized services while ensuring data privacy. An AI assistant for: 
+
+Your brand
+Increased engagement and loyalty. 
+Your customers
+Continual learning for customized experiences. 
+Your data
+Secure and personalized insights.
+
+
+The following example demonstrates how to use the Assistant service by using credentials:
+
+```php
+$assistant = new Assistant( WatsonCredential::initWithCredentials('your_username', 'your_password') );
+$result = $assistant->sendMessage('your_message', 'your_workspace_id');
+echo $result->getContent();
+```
 
 ## Tone Analyzer
 The IBM Watson Tone Analyzer service can be used to discover, understand, and revise the language tones in text. The service uses linguistic analysis to detect three types of tones from written text: emotions, social tendencies, and writing style.
@@ -57,12 +78,14 @@ $analyzer = new ToneAnalyzer( WatsonCredential::initWithCredentials('your_userna
 ```
 
 or invoke Tone Analyzer API using token, the `SimpleTokenProvider` is a sample of TokenProvider, we recommend you to implement your own Token Provider, by implementing the `TokenProviderInterface`.
+
 ```php
 $tokenProvider = new SimpleTokenProvider('https://your-token-factory-url');
 $analyzer = new ToneAnalyzer( WatsonCredential::initWithTokenProvider( $tokenProvider ) );
 ```
 
 Place the content to be analyzed, call the Tone API and check the result: 
+
 ```php
 $model = new ToneModel();
 $model->setText('your text to be analyzed.');
@@ -74,6 +97,7 @@ echo $result->getContent();
 The IBM Watson™ Natural Language Classifier service uses machine learning algorithms to return the top matching predefined classes for short text input. You create and train a classifier to connect predefined classes to example texts so that the service can apply those classes to new inputs.
 
 The following example demonstrates how to use the Natural Language Classifier:
+
 ```php
 $nlc = new NaturalLanguageClassifier( WatsonCredential::initWithCredentials('your_username', 'your_password') );
 $result = $nlc->classify('your text to be classified.', 'your classifier id');
@@ -108,6 +132,7 @@ echo $result->getContent();
 ## API response
 All of the service responses are wrapped in `HttpResponse` class instead of original format of response, so it will be easy for you to use your own HttpClient if necessory.
 Once there is a result from Watson APIs, there are three common methods you can leverage:
+
 ```php
 // Get HTTP status code
 public function getStatusCode();
@@ -118,6 +143,7 @@ public function getContent();
 ```
 
 We use `Tone Analyzer` for instance:
+
 ```php
 $analyzer = new ToneAnalyzer(...);
 // getTone will return HttpResponse type
