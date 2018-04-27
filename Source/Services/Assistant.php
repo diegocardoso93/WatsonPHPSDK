@@ -36,6 +36,8 @@ use WatsonSDK\Services\Assistant\CreateExampleModel;
 use WatsonSDK\Services\Assistant\UpdateExampleModel;
 use WatsonSDK\Services\Assistant\CreateEntityModel;
 use WatsonSDK\Services\Assistant\UpdateEntityModel;
+use WatsonSDK\Services\Assistant\CreateValueModel;
+use WatsonSDK\Services\Assistant\UpdateValueModel;
 
 /**
  * Assistant class
@@ -71,14 +73,9 @@ class Assistant extends WatsonService {
         $config->setQuery( [ 'version' => $version ] );
         $config->setMethod(HttpClientConfiguration::METHOD_POST);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/{$workspace_id}/message");
 
-        $url = self::BASE_URL."/workspaces/{$workspace_id}/message";
-
-        $config->setURL($url);
-
-        $response = $this->sendRequest($config);
-
-        return $response;
+        return $this->sendRequest($config);
     }
 
     /**
@@ -114,6 +111,7 @@ class Assistant extends WatsonService {
         throw new InvalidParameterException();
     }
 
+    
     /**
      * List the workspaces associated with a Assistant service instance.
      * 
@@ -197,13 +195,9 @@ class Assistant extends WatsonService {
         $config->setQuery( [ 'version' => $version ] );
         $config->setMethod(HttpClientConfiguration::METHOD_POST);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
-        
-        $url = self::BASE_URL."/workspaces";
-        
-        $config->setURL($url);
-        $response = $this->sendRequest($config);
-        
-        return $response;
+        $config->setURL(self::BASE_URL."/workspaces");
+
+        return $this->sendRequest($config);
     }
     
     /**
@@ -227,13 +221,9 @@ class Assistant extends WatsonService {
         $config->setQuery( [ 'version' => $version ] );
         $config->setMethod(HttpClientConfiguration::METHOD_POST);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
-        
-        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId();
-        
-        $config->setURL($url);
-        $response = $this->sendRequest($config);
-        
-        return $response;
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId());
+
+        return $this->sendRequest($config);
     }
     
     /**
@@ -255,7 +245,6 @@ class Assistant extends WatsonService {
         return $this->sendRequest($config);
     }
 
-    
     
     /**
      * List the intents associated with a Workspace.
@@ -351,12 +340,9 @@ class Assistant extends WatsonService {
         $config->setMethod(HttpClientConfiguration::METHOD_POST);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
         
-        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents";
-        $config->setURL($url);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents");
         
-        $response = $this->sendRequest($config);
-        
-        return $response;
+        return $this->sendRequest($config);
     }
 
     /**
@@ -381,13 +367,9 @@ class Assistant extends WatsonService {
         $config->setQuery( [ 'version' => $version ] );
         $config->setMethod(HttpClientConfiguration::METHOD_POST);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
-        
-        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents/".$model->getIntent();
-        
-        $config->setURL($url);
-        $response = $this->sendRequest($config);
-        
-        return $response;
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents/".$model->getIntent());
+
+        return $this->sendRequest($config);
     }
 
     /**
@@ -409,7 +391,6 @@ class Assistant extends WatsonService {
         
         return $this->sendRequest($config);
     }
-    
     
     
     /**
@@ -498,13 +479,9 @@ class Assistant extends WatsonService {
         $config->setQuery( [ 'version' => $version ] );
         $config->setMethod(HttpClientConfiguration::METHOD_POST);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents/".$model->getIntent()."/examples");
         
-        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents/".$model->getIntent()."/examples";
-        $config->setURL($url);
-        
-        $response = $this->sendRequest($config);
-        
-        return $response;
+        return $this->sendRequest($config);
     }
     
     /**
@@ -529,13 +506,9 @@ class Assistant extends WatsonService {
         $config->setQuery( [ 'version' => $version ] );
         $config->setMethod(HttpClientConfiguration::METHOD_POST);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents/".$model->getIntent()."/examples/".$model->getText());
         
-        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/intents/".$model->getIntent()."/examples/".$model->getText();
-        
-        $config->setURL($url);
-        $response = $this->sendRequest($config);
-        
-        return $response;
+        return $this->sendRequest($config);
     }
     
     /**
@@ -557,7 +530,6 @@ class Assistant extends WatsonService {
         
         return $this->sendRequest($config);
     }
-    
     
     
     /**
@@ -649,9 +621,7 @@ class Assistant extends WatsonService {
         $config->setQuery( [ 'version' => $version ] );
         $config->setMethod(HttpClientConfiguration::METHOD_POST);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
-        
-        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/entities";
-        $config->setURL($url);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/entities");
         
         $response = $this->sendRequest($config);
         
@@ -680,13 +650,9 @@ class Assistant extends WatsonService {
         $config->setQuery( [ 'version' => $version ] );
         $config->setMethod(HttpClientConfiguration::METHOD_POST);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/entities/".$model->getEntity());
         
-        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/entities/".$model->getEntity();
-        
-        $config->setURL($url);
-        $response = $this->sendRequest($config);
-        
-        return $response;
+        return $this->sendRequest($config);
     }
     
     /**
@@ -708,4 +674,154 @@ class Assistant extends WatsonService {
         
         return $this->sendRequest($config);
     }
+    
+    
+    /**
+     * List the values associated with a entity.
+     *
+     * @param $workspace_id string
+     * @param $entity_id string
+     * @return HttpResponse
+     */
+    public function listValues($workspace_id, $entity_id, $export = NULL, $page_limit = NULL, $include_count = NULL, $sort = NULL, $cursor = NULL, $include_audit = true, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($export) === FALSE && is_integer($export)) {
+            $config->addQuery('export', $export);
+        }
+        
+        if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
+            $config->addQuery('page_limit', $page_limit);
+        }
+        
+        if(is_null($include_count) === FALSE) {
+            $config->addQuery('include_count', $include_count);
+        }
+        
+        if(is_null($sort) === FALSE) {
+            $config->addQuery('sort', $sort);
+        }
+        
+        if(is_null($cursor) === FALSE) {
+            $config->addQuery('cursor', $cursor);
+        }
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/entities/".$entity_id."/values");
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Get value associated with a entity.
+     *
+     * @param $workspace_id string
+     * @param $entity string
+     * @param $value string
+     * @return HttpResponse
+     */
+    public function getValue($workspace_id, $entity, $value, $export = NULL, $include_audit = NULL, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($export) === FALSE && is_integer($export)) {
+            $config->addQuery('export', $export);
+        }
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/entities/".$entity."/values/".$value);
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Create value associated with a entity.
+     *
+     * @param $value CreateValueModel
+     * @return HttpResponse
+     */
+    public function createValue($value, $version = self::VERSION) {
+        
+        if($value instanceof CreateValueModel) {
+            $model = $value;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/entities/".$model->getEntity()."/values");
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Update a value associated with a entity.
+     *
+     * @param $value UpdateValueModel
+     * @return HttpResponse
+     */
+    public function updateValue($value, $version = self::VERSION) {
+        
+        if($value instanceof UpdateValueModel) {
+            $model = $value;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/entities/".$model->getEntity()."/values/".$model->getValue());
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Delete value associated with a entity.
+     *
+     * @param $workspace_id string
+     * @param $entity string
+     * @param $value string
+     * @return HttpResponse
+     */
+    public function deleteValue($workspace_id, $entity, $value, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_DELETE);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/entities/".$entity."/values/".$value);
+        
+        return $this->sendRequest($config);
+    }
+    
 }
