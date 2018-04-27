@@ -20,9 +20,9 @@ namespace WatsonSDK\Services\Assistant;
 use WatsonSDK\Common\ServiceModel;
 
 /**
- * Assistant CreateEntity model
+ * Assistant UpdateEntityModel model
  */
-class CreateEntityModel extends ServiceModel {
+class UpdateEntityModel extends ServiceModel {
     
     /**
      * @name(workspace_id)
@@ -43,13 +43,22 @@ class CreateEntityModel extends ServiceModel {
     protected $_entity;
 
     /**
+     * @name(new_entity)
+     *
+     * The name of the new entity (for example, beverage).
+     *
+     * @var string
+     */
+    protected $_new_entity;
+    
+    /**
      * @name(description)
      * 
      * The description of the entity.
      * 
      * @var string
      */
-    protected $_description;
+    protected $_new_description;
 
     /**
      * @name(metadata)
@@ -58,7 +67,7 @@ class CreateEntityModel extends ServiceModel {
      * 
      * @var object
      */
-    protected $_metadata;
+    protected $_new_metadata;
 
     /**
      * @name(values)
@@ -67,7 +76,7 @@ class CreateEntityModel extends ServiceModel {
      * 
      * @var array
      */
-    protected $_values;
+    protected $_new_values;
 
     /**
      * @name(fuzzy_match)
@@ -76,26 +85,28 @@ class CreateEntityModel extends ServiceModel {
      * 
      * @var boolean
      */
-    protected $_fuzzy_match;
+    protected $_new_fuzzy_match;
 
     /**
      * Constructor.
      *
      * @param string $workspace_id
      * @param string $entity
-     * @param string $description
-     * @param object $metadata
-     * @param array $values
-     * @param boolean $fuzzy_match
+     * @param string $new_entity
+     * @param string $new_description
+     * @param object $new_metadata
+     * @param array $new_values
+     * @param boolean $new_fuzzy_match
      */
-    function __construct($workspace_id, $entity, $description = '', $metadata = NULL, $values = NULL, $fuzzy_match = NULL) {
+    function __construct($workspace_id, $entity, $new_entity = '', $new_description = '', $new_metadata = NULL, $new_values = NULL, $new_fuzzy_match = NULL) {
         
         $this->setWorkspaceId($workspace_id);
         $this->setEntity($entity);
-        $this->setDescription($description);
-        $this->setMetadata($metadata ? $metadata : new \stdClass);
-        $this->setValues($values);
-        $this->setFuzzyMatch((bool) $fuzzy_match);
+        $this->setNewEntity($new_entity);
+        $this->setNewDescription($new_description);
+        $this->setNewMetadata($new_metadata ? $metadata : new \stdClass);
+        $this->setNewValues($new_values);
+        $this->setNewFuzzyMatch((bool) $new_fuzzy_match);
     }
     
     /**
@@ -133,60 +144,79 @@ class CreateEntityModel extends ServiceModel {
     public function setEntity($val) {
         $this->_entity = $val;
     }
-
+    
+    
     /**
-     * Get the description of the entity.
+     * Get the name of the new entity (for example, beverage).
+     *
+     * @return string
+     */
+    public function getNewEntity() {
+        return $this->_new_entity;
+    }
+    
+    /**
+     * Set the name of the new entity (for example, beverage).
+     *
+     * @param $val string
+     */
+    public function setNewEntity($val) {
+        $this->_new_entity = $val;
+    }
+    
+    /**
+     * Get the new description of the entity.
      * 
      * @return string
      */
-    public function getDescription() {
+    public function getNewDescription() {
         return $this->_description;
     }
 
     /**
-     * Set the description of the entity.
+     * Set the new description of the entity.
      * 
      * @param $val string
      */
-    public function setDescription($val) {
-        $this->_description = $val;
+    public function setNewDescription($val) {
+        $this->_new_description = $val;
     }
 
     /**
-     * Get the metadata related to the entity.
+     * Get the new metadata related to the entity.
      * 
      * @return array
      */
-    public function getMetadata() {
-        return $this->_metadata;
+    public function getNewMetadata() {
+        return $this->_new_metadata;
     }
 
     /**
-     * Set the metadata related to the entity.
+     * Set the new metadata related to the entity.
      * 
      * @param $val array
      */
-    public function setMetadata($val) {
-        $this->_metadata = $val;
+    public function setNewMetadata($val) {
+        $this->_new_metadata = $val;
     }
 
 
     /**
-     * Get array of entity values.
+     * Get array of new entity values.
      *
      * @return array
      */
-    public function getValues() {
-        return $this->_values;
+    public function getNewValues() {
+        return $this->_new_values;
     }
 
     /**
-     * Set array of entity values.
+     * Set array of new entity values.
      *
      * @param $val array
      */
-    public function setValues(array $val) {
-        $this->_values = $val;
+    public function setNewValues(array $val) {
+        $this->_new_values = $val;
     }
 
     /**
@@ -194,8 +224,8 @@ class CreateEntityModel extends ServiceModel {
      *
      * @return boolean
      */
-    public function getFuzzyMatch() {
-        return $this->_fuzzy_match;
+    public function getNewFuzzyMatch() {
+        return $this->_new_fuzzy_match;
     }
 
     /**
@@ -203,8 +233,8 @@ class CreateEntityModel extends ServiceModel {
      *
      * @param boolean $val
      */
-    public function setFuzzyMatch($val) {
-        $this->_fuzzy_match = $val;
+    public function setNewFuzzyMatch($val) {
+        $this->_new_fuzzy_match = $val;
     }
 
 }

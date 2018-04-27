@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-namespace WatsonSDK\Services\Conversation;
+namespace WatsonSDK\Services\Assistant;
 
 use WatsonSDK\Common\ServiceModel;
 
 /**
- * Conversation CreateExample model
+ * Assistant Example model
  */
-class CreateExampleModel extends ServiceModel {
+class ExampleModel extends ServiceModel {
 
     /**
      * @name(text)
@@ -32,6 +32,16 @@ class CreateExampleModel extends ServiceModel {
      * @var string
      */
     protected $_text;
+
+    /**
+     * Constructor.
+     *
+     * @param string $text
+     */
+    function __construct($text) {
+        
+        $this->setText($text);
+    }
 
     /**
      * Get the text of a user input example.

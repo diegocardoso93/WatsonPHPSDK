@@ -34,6 +34,8 @@ use WatsonSDK\Services\Assistant\CreateWorkspaceModel;
 use WatsonSDK\Services\Assistant\UpdateWorkspaceModel;
 use WatsonSDK\Services\Assistant\CreateExampleModel;
 use WatsonSDK\Services\Assistant\UpdateExampleModel;
+use WatsonSDK\Services\Assistant\CreateEntityModel;
+use WatsonSDK\Services\Assistant\UpdateEntityModel;
 
 /**
  * Assistant class
@@ -83,6 +85,7 @@ class Assistant extends WatsonService {
      * Send text message to Assistant service
      * 
      * @param $message string
+     * @param $workspace_id string
      * @return HttpResponse
      */
     public function sendMessageByText($message, $workspace_id, $version = self::VERSION) {
@@ -94,7 +97,8 @@ class Assistant extends WatsonService {
     /**
      * Send message to Assistant service
      * 
-     * @param  $val MessageRequestModel | string
+     * @param $val MessageRequestModel | string
+     * @param $workspace_id string
      * @return HttpResponse
      */
     public function sendMessage($val, $workspace_id, $version = self::VERSION) {
@@ -147,6 +151,7 @@ class Assistant extends WatsonService {
     /**
      * Get workspace associated with a Assistant service instance.
      *
+     * @param $workspace_id string
      * @return HttpResponse
      */
     public function getWorkspace($workspace_id, $export = NULL, $include_audit = NULL, $version = self::VERSION) {
@@ -171,7 +176,7 @@ class Assistant extends WatsonService {
     }
     
     /**
-     * Create a workspace.
+     * Create a workspace associated with a Assistant service instance.
      * 
      * @param $workspace CreateWorkspaceModel
      * @return HttpResponse
@@ -202,7 +207,7 @@ class Assistant extends WatsonService {
     }
     
     /**
-     * Update a workspace.
+     * Update a workspace associated with a Assistant service instance.
      *
      * @param $workspace UpdateWorkspaceModel
      * @return HttpResponse
@@ -234,6 +239,7 @@ class Assistant extends WatsonService {
     /**
      * Delete workspace associated with a Assistant service instance.
      *
+     * @param $workspace_id string
      * @return HttpResponse
      */
     public function deleteWorkspace($workspace_id, $version = self::VERSION) {
@@ -254,6 +260,7 @@ class Assistant extends WatsonService {
     /**
      * List the intents associated with a Workspace.
      *
+     * @param $workspace_id string
      * @return HttpResponse
      */
     public function listIntents($workspace_id, $export = NULL, $page_limit = NULL, $include_count = NULL, $sort = NULL, $cursor = NULL, $include_audit = true, $version = self::VERSION) {
@@ -296,6 +303,8 @@ class Assistant extends WatsonService {
     /**
      * Get intent associated with a workspace.
      *
+     * @param $workspace_id string
+     * @param $intent string
      * @return HttpResponse
      */
     public function getIntent($workspace_id, $intent, $export = NULL, $include_audit = NULL, $version = self::VERSION) {
@@ -320,7 +329,7 @@ class Assistant extends WatsonService {
     }
 
     /**
-     * Create intent.
+     * Create intent associated with a workspace.
      *
      * @param $intent CreateIntentModel
      * @return HttpResponse
@@ -351,9 +360,9 @@ class Assistant extends WatsonService {
     }
 
     /**
-     * Update a intent.
+     * Update a intent associated with a workspace.
      *
-     * @param $workspace UpdateIntentModel
+     * @param $intent UpdateIntentModel
      * @return HttpResponse
      */
     public function updateIntent($intent, $version = self::VERSION) {
@@ -382,8 +391,32 @@ class Assistant extends WatsonService {
     }
 
     /**
-     * List the examples associated with a Intent.
+     * Delete intent associated with a workspace.
      *
+     * @param $workspace_id string
+     * @param $intent string
+     * @return HttpResponse
+     */
+    public function deleteIntent($workspace_id, $intent, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_DELETE);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/intents/".$intent);
+        
+        return $this->sendRequest($config);
+    }
+    
+    
+    
+    /**
+     * List the examples associated with a intent.
+     *
+     * @param $workspace_id string
+     * @param $intent string
      * @return HttpResponse
      */
     public function listExamples($workspace_id, $intent, $page_limit = NULL, $include_count = NULL, $sort = NULL, $cursor = NULL, $include_audit = true, $version = self::VERSION) {
@@ -422,6 +455,8 @@ class Assistant extends WatsonService {
     /**
      * Get example associated with a intent.
      *
+     * @param $workspace_id string
+     * @param $intent string
      * @return HttpResponse
      */
     public function getExample($workspace_id, $intent, $text, $include_audit = NULL, $version = self::VERSION) {
@@ -442,9 +477,9 @@ class Assistant extends WatsonService {
     }
     
     /**
-     * Create example.
+     * Create example associated with a intent.
      *
-     * @param $intent CreateExampleModel
+     * @param $example CreateExampleModel
      * @return HttpResponse
      */
     public function createExample($example, $version = self::VERSION) {
@@ -473,9 +508,9 @@ class Assistant extends WatsonService {
     }
     
     /**
-     * Update a example.
+     * Update a example associated with a intent.
      *
-     * @param $workspace UpdateExampleModel
+     * @param $example UpdateExampleModel
      * @return HttpResponse
      */
     public function updateExample($example, $version = self::VERSION) {
@@ -501,5 +536,176 @@ class Assistant extends WatsonService {
         $response = $this->sendRequest($config);
         
         return $response;
+    }
+    
+    /**
+     * Delete example associated with a intent.
+     *
+     * @param $workspace_id string
+     * @param $intent string
+     * @return HttpResponse
+     */
+    public function deleteExample($workspace_id, $intent, $text, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_DELETE);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/intents/".$intent."/examples/".$text);
+        
+        return $this->sendRequest($config);
+    }
+    
+    
+    
+    /**
+     * List the entities associated with a Workspace.
+     *
+     * @param $workspace_id string
+     * @return HttpResponse
+     */
+    public function listEntities($workspace_id, $export = NULL, $page_limit = NULL, $include_count = NULL, $sort = NULL, $cursor = NULL, $include_audit = true, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($export) === FALSE && is_integer($export)) {
+            $config->addQuery('export', $export);
+        }
+        
+        if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
+            $config->addQuery('page_limit', $page_limit);
+        }
+        
+        if(is_null($include_count) === FALSE) {
+            $config->addQuery('include_count', $include_count);
+        }
+        
+        if(is_null($sort) === FALSE) {
+            $config->addQuery('sort', $sort);
+        }
+        
+        if(is_null($cursor) === FALSE) {
+            $config->addQuery('cursor', $cursor);
+        }
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/entities");
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Get entity associated with a workspace.
+     *
+     * @param $workspace_id string
+     * @param $entity string
+     * @return HttpResponse
+     */
+    public function getEntity($workspace_id, $entity, $include_audit = NULL, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/entities/".$entity);
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Create entity associated with a workspace.
+     *
+     * @param $entity CreateEntityModel
+     * @return HttpResponse
+     */
+    public function createEntity($entity, $version = self::VERSION) {
+        
+        if($entity instanceof CreateEntityModel) {
+            $model = $entity;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        
+        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/entities";
+        $config->setURL($url);
+        
+        $response = $this->sendRequest($config);
+        
+        return $response;
+    }
+    
+    /**
+     * Update a entity associated with a workspace.
+     *
+     * @param $example UpdateEntityModel
+     * @return HttpResponse
+     */
+    public function updateEntity($entity, $version = self::VERSION) {
+        
+        if($entity instanceof UpdateEntityModel) {
+            $model = $entity;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        
+        $url = self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/entities/".$model->getEntity();
+        
+        $config->setURL($url);
+        $response = $this->sendRequest($config);
+        
+        return $response;
+    }
+    
+    /**
+     * Delete entity associated with a workspace.
+     *
+     * @param $workspace_id string
+     * @param $entity string
+     * @return HttpResponse
+     */
+    public function deleteEntity($workspace_id, $entity, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_DELETE);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/entities/".$entity);
+        
+        return $this->sendRequest($config);
     }
 }

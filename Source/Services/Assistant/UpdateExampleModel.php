@@ -27,7 +27,7 @@ class UpdateExampleModel extends ServiceModel {
     /**
      * @name(workspace_id)
      *
-     * The if of the workspace.
+     * The id of the workspace.
      *
      * @var string
      */
