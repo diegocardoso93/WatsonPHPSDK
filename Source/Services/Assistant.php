@@ -26,8 +26,6 @@ use WatsonSDK\Common\WatsonCredential;
 use WatsonSDK\Common\InvalidParameterException;
 
 use WatsonSDK\Services\Assistant\MessageRequestModel;
-use WatsonSDK\Services\Assistant\WorkspaceRequestModel;
-use WatsonSDK\Services\Assistant\IntentRequestModel;
 use WatsonSDK\Services\Assistant\UpdateIntentModel;
 use WatsonSDK\Services\Assistant\CreateIntentModel;
 use WatsonSDK\Services\Assistant\CreateWorkspaceModel;
@@ -38,6 +36,8 @@ use WatsonSDK\Services\Assistant\CreateEntityModel;
 use WatsonSDK\Services\Assistant\UpdateEntityModel;
 use WatsonSDK\Services\Assistant\CreateValueModel;
 use WatsonSDK\Services\Assistant\UpdateValueModel;
+use WatsonSDK\Services\Assistant\CreateCounterexampleModel;
+use WatsonSDK\Services\Assistant\UpdateCounterexampleModel;
 
 /**
  * Assistant class
@@ -820,6 +820,145 @@ class Assistant extends WatsonService {
         $config->setMethod(HttpClientConfiguration::METHOD_DELETE);
         $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
         $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/entities/".$entity."/values/".$value);
+        
+        return $this->sendRequest($config);
+    }
+    
+    
+    /**
+     * List the counterexamples associated with a workspace.
+     *
+     * @param $workspace_id string
+     * @param $entity_id string
+     * @return HttpResponse
+     */
+    public function listCounterexamples($workspace_id, $page_limit = NULL, $include_count = NULL, $sort = NULL, $cursor = NULL, $include_audit = true, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
+            $config->addQuery('page_limit', $page_limit);
+        }
+        
+        if(is_null($include_count) === FALSE) {
+            $config->addQuery('include_count', $include_count);
+        }
+        
+        if(is_null($sort) === FALSE) {
+            $config->addQuery('sort', $sort);
+        }
+        
+        if(is_null($cursor) === FALSE) {
+            $config->addQuery('cursor', $cursor);
+        }
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/counterexamples");
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Create counterexample associated with a intent.
+     *
+     * @param $counterexample CreateCounterexampleModel
+     * @return HttpResponse
+     */
+    public function createCounterexample($counterexample, $version = self::VERSION) {
+        
+        if($counterexample instanceof CreateCounterexampleModel) {
+            $model = $counterexample;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/counterexamples");
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Get Counterexample associated with a workspace.
+     *
+     * @param $workspace_id string
+     * @param $text string
+     * @return HttpResponse
+     */
+    public function getCounterexample($workspace_id, $text, $include_audit = NULL, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/counterexamples/".rawurlencode($text));
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Update a counterexample associated with a workspace.
+     *
+     * @param $example UpdateCounterexampleModel
+     * @return HttpResponse
+     */
+    public function updateCounterexample($counterexample, $version = self::VERSION) {
+        
+        if($counterexample instanceof UpdateCounterexampleModel) {
+            $model = $counterexample;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/counterexamples/".rawurlencode($model->getText()));
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Delete counterexample associated with a intent.
+     *
+     * @param $workspace_id string
+     * @param $text string
+     * @return HttpResponse
+     */
+    public function deleteCounterexample($workspace_id, $text, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_DELETE);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/counterexamples/".rawurlencode($text));
         
         return $this->sendRequest($config);
     }
