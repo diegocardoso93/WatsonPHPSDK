@@ -97,7 +97,7 @@ class HttpResponse {
         $error_string = $content['error'];
         if (isset($content['errors'])) {
             foreach($content['errors'] as $error) {
-                $error_string .= ', ' . $error['message'];
+                $error_string .= ', ' . $error['path'] . ': ' . $error['message'];
             }
         }
         return $error_string;

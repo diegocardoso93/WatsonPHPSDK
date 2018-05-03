@@ -17,12 +17,9 @@
 
 namespace WatsonSDK\Services;
 
-use WatsonSDK\Common\HttpClient;
 use WatsonSDK\Common\HttpResponse;
 use WatsonSDK\Common\HttpClientConfiguration;
-use WatsonSDK\Common\HttpClientException;
 use WatsonSDK\Common\WatsonService;
-use WatsonSDK\Common\WatsonCredential;
 use WatsonSDK\Common\InvalidParameterException;
 
 use WatsonSDK\Services\Assistant\MessageRequestModel;
@@ -38,6 +35,10 @@ use WatsonSDK\Services\Assistant\CreateValueModel;
 use WatsonSDK\Services\Assistant\UpdateValueModel;
 use WatsonSDK\Services\Assistant\CreateCounterexampleModel;
 use WatsonSDK\Services\Assistant\UpdateCounterexampleModel;
+use WatsonSDK\Services\Assistant\CreateDialogNodeModel;
+use WatsonSDK\Services\Assistant\UpdateDialogNodeModel;
+use WatsonSDK\Services\Assistant\CreateSynonymModel;
+use WatsonSDK\Services\Assistant\UpdateSynonymModel;
 
 /**
  * Assistant class
@@ -46,14 +47,6 @@ class Assistant extends WatsonService {
 
     const BASE_URL = 'https://gateway.watsonplatform.net/assistant/api/v1';
     const VERSION = '2018-02-16';
-
-    const SORT_BY_NAME_ASC = 'name';
-    const SORT_BY_MODIFIED_ASC = 'modified';
-    const SORT_BY_WORKSPACE_ID_ASC = 'workspace_id';
-
-    const SORT_BY_NAME_DESC = '-name';
-    const SORT_BY_MODIFIED_DESC = '-modified';
-    const SORT_BY_WORKSPACE_ID_DESC = '-workspace_id';
 
     /**
      * Send message to Assistant service by using the MessageRequestModel instance
@@ -103,7 +96,6 @@ class Assistant extends WatsonService {
         if($val instanceof MessageRequestModel) {
             return $this->sendMessageByModel($val, $workspace_id, $version);
         }
-
         if(is_string($val)) {
             return $this->sendMessageByText($val, $workspace_id, $version);
         }
@@ -161,7 +153,6 @@ class Assistant extends WatsonService {
         if(is_null($export) === FALSE) {
             $config->addQuery('export', $export);
         }
-        
         if(is_null($include_audit) === FALSE) {
             $config->addQuery('include_audit', $include_audit);
         }
@@ -261,23 +252,18 @@ class Assistant extends WatsonService {
         if(is_null($export) === FALSE && is_integer($export)) {
             $config->addQuery('export', $export);
         }
-        
         if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
             $config->addQuery('page_limit', $page_limit);
         }
-        
         if(is_null($include_count) === FALSE) {
             $config->addQuery('include_count', $include_count);
         }
-        
         if(is_null($sort) === FALSE) {
             $config->addQuery('sort', $sort);
         }
-        
         if(is_null($cursor) === FALSE) {
             $config->addQuery('cursor', $cursor);
         }
-        
         if(is_null($include_audit) === FALSE) {
             $config->addQuery('include_audit', $include_audit);
         }
@@ -305,7 +291,6 @@ class Assistant extends WatsonService {
         if(is_null($export) === FALSE) {
             $config->addQuery('export', $export);
         }
-        
         if(is_null($include_audit) === FALSE) {
             $config->addQuery('include_audit', $include_audit);
         }
@@ -409,19 +394,15 @@ class Assistant extends WatsonService {
         if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
             $config->addQuery('page_limit', $page_limit);
         }
-        
         if(is_null($include_count) === FALSE) {
             $config->addQuery('include_count', $include_count);
         }
-        
         if(is_null($sort) === FALSE) {
             $config->addQuery('sort', $sort);
         }
-        
         if(is_null($cursor) === FALSE) {
             $config->addQuery('cursor', $cursor);
         }
-        
         if(is_null($include_audit) === FALSE) {
             $config->addQuery('include_audit', $include_audit);
         }
@@ -547,23 +528,18 @@ class Assistant extends WatsonService {
         if(is_null($export) === FALSE && is_integer($export)) {
             $config->addQuery('export', $export);
         }
-        
         if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
             $config->addQuery('page_limit', $page_limit);
         }
-        
         if(is_null($include_count) === FALSE) {
             $config->addQuery('include_count', $include_count);
         }
-        
         if(is_null($sort) === FALSE) {
             $config->addQuery('sort', $sort);
         }
-        
         if(is_null($cursor) === FALSE) {
             $config->addQuery('cursor', $cursor);
         }
-        
         if(is_null($include_audit) === FALSE) {
             $config->addQuery('include_audit', $include_audit);
         }
@@ -692,23 +668,18 @@ class Assistant extends WatsonService {
         if(is_null($export) === FALSE && is_integer($export)) {
             $config->addQuery('export', $export);
         }
-        
         if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
             $config->addQuery('page_limit', $page_limit);
         }
-        
         if(is_null($include_count) === FALSE) {
             $config->addQuery('include_count', $include_count);
         }
-        
         if(is_null($sort) === FALSE) {
             $config->addQuery('sort', $sort);
         }
-        
         if(is_null($cursor) === FALSE) {
             $config->addQuery('cursor', $cursor);
         }
-        
         if(is_null($include_audit) === FALSE) {
             $config->addQuery('include_audit', $include_audit);
         }
@@ -737,7 +708,6 @@ class Assistant extends WatsonService {
         if(is_null($export) === FALSE && is_integer($export)) {
             $config->addQuery('export', $export);
         }
-        
         if(is_null($include_audit) === FALSE) {
             $config->addQuery('include_audit', $include_audit);
         }
@@ -826,10 +796,151 @@ class Assistant extends WatsonService {
     
     
     /**
-     * List the counterexamples associated with a workspace.
+     * List the synonyms associated with a value.
      *
      * @param $workspace_id string
      * @param $entity_id string
+     * @return HttpResponse
+     */
+    public function listSynonyms($workspace_id, $entity, $value, $export = NULL, $page_limit = NULL, $include_count = NULL, $sort = NULL, $cursor = NULL, $include_audit = true, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($export) === FALSE && is_integer($export)) {
+            $config->addQuery('export', $export);
+        }
+        if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
+            $config->addQuery('page_limit', $page_limit);
+        }
+        if(is_null($include_count) === FALSE) {
+            $config->addQuery('include_count', $include_count);
+        }
+        if(is_null($sort) === FALSE) {
+            $config->addQuery('sort', $sort);
+        }
+        if(is_null($cursor) === FALSE) {
+            $config->addQuery('cursor', $cursor);
+        }
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/entities/".$entity."/values/".$value."/synonyms");
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Get synonym associated with a value.
+     *
+     * @param $workspace_id string
+     * @param $entity string
+     * @param $value string
+     * @param $synonym string
+     * @return HttpResponse
+     */
+    public function getSynonym($workspace_id, $entity, $value, $synonym, $include_audit = NULL, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/entities/".$entity."/values/".$value."/synonyms/".$synonym);
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Create synonym associated with a value.
+     *
+     * @param $value CreateSynonymModel
+     * @return HttpResponse
+     */
+    public function createSynonym($synonym, $version = self::VERSION) {
+        
+        if($synonym instanceof CreateSynonymModel) {
+            $model = $synonym;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/entities/".$model->getEntity()."/values/".$model->getValue()."/synonyms");
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Update a synonym associated with a entity.
+     *
+     * @param $value UpdateSynonymModel
+     * @return HttpResponse
+     */
+    public function updateSynonym($value, $version = self::VERSION) {
+        
+        if($value instanceof UpdateSynonymModel) {
+            $model = $value;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/entities/".$model->getEntity()."/values/".$model->getValue()."/synonyms/".$model->getSynonym());
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Delete synonym associated with a value.
+     *
+     * @param $workspace_id string
+     * @param $entity string
+     * @param $value string
+     * @param $synonym string
+     * @return HttpResponse
+     */
+    public function deleteSynonym($workspace_id, $entity, $value, $synonym, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_DELETE);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/entities/".$entity."/values/".$value."/synonyms/".$synonym);
+        
+        return $this->sendRequest($config);
+    }
+    
+    
+    /**
+     * List the counterexamples for a workspace.
+     *
+     * @param $workspace_id string
      * @return HttpResponse
      */
     public function listCounterexamples($workspace_id, $page_limit = NULL, $include_count = NULL, $sort = NULL, $cursor = NULL, $include_audit = true, $version = self::VERSION) {
@@ -841,19 +952,15 @@ class Assistant extends WatsonService {
         if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
             $config->addQuery('page_limit', $page_limit);
         }
-        
         if(is_null($include_count) === FALSE) {
             $config->addQuery('include_count', $include_count);
         }
-        
         if(is_null($sort) === FALSE) {
             $config->addQuery('sort', $sort);
         }
-        
         if(is_null($cursor) === FALSE) {
             $config->addQuery('cursor', $cursor);
         }
-        
         if(is_null($include_audit) === FALSE) {
             $config->addQuery('include_audit', $include_audit);
         }
@@ -866,7 +973,7 @@ class Assistant extends WatsonService {
     }
     
     /**
-     * Create counterexample associated with a intent.
+     * Create counterexample associated with a workspace.
      *
      * @param $counterexample CreateCounterexampleModel
      * @return HttpResponse
@@ -944,7 +1051,7 @@ class Assistant extends WatsonService {
     }
     
     /**
-     * Delete counterexample associated with a intent.
+     * Delete counterexample associated with a workspace.
      *
      * @param $workspace_id string
      * @param $text string
@@ -963,4 +1070,137 @@ class Assistant extends WatsonService {
         return $this->sendRequest($config);
     }
     
+    
+    /**
+     * List the dialog nodes for a workspace.
+     *
+     * @param $workspace_id string
+     * @return HttpResponse
+     */
+    public function listDialogNodes($workspace_id, $page_limit = NULL, $include_count = NULL, $sort = NULL, $cursor = NULL, $include_audit = true, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
+            $config->addQuery('page_limit', $page_limit);
+        }
+        if(is_null($include_count) === FALSE) {
+            $config->addQuery('include_count', $include_count);
+        }
+        if(is_null($sort) === FALSE) {
+            $config->addQuery('sort', $sort);
+        }
+        if(is_null($cursor) === FALSE) {
+            $config->addQuery('cursor', $cursor);
+        }
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/dialog_nodes");
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Create dialog_node associated with a workspace.
+     *
+     * @param $dialog_node CreateDialogNodeModel
+     * @return HttpResponse
+     */
+    public function createDialogNode($dialog_node, $version = self::VERSION) {
+        
+        if($dialog_node instanceof CreateDialogNodeModel) {
+            $model = $dialog_node;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/dialog_nodes");
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Get dialog_node associated with a workspace.
+     *
+     * @param $workspace_id string
+     * @param $dialog_node string
+     * @return HttpResponse
+     */
+    public function getDialogNode($workspace_id, $dialog_node, $include_audit = NULL, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($include_audit) === FALSE) {
+            $config->addQuery('include_audit', $include_audit);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/dialog_nodes/".$dialog_node);
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Update a dialog_node associated with a workspace.
+     *
+     * @param $dialog_node UpdateDialogNodeModel
+     * @return HttpResponse
+     */
+    public function updateDialogNode($dialog_node, $version = self::VERSION) {
+        
+        if($dialog_node instanceof UpdateDialogNodeModel) {
+            $model = $dialog_node;
+        } else {
+            throw new InvalidParameterException();
+        }
+        
+        $config = $this->initConfig();
+        $config->addHeaders($model->getData('header'));
+        
+        $config->setData($model->getData());
+        
+        $config->setQuery( [ 'version' => $version ] );
+        $config->setMethod(HttpClientConfiguration::METHOD_POST);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$model->getWorkspaceId()."/dialog_nodes/".$model->getDialogNode());
+        
+        return $this->sendRequest($config);
+    }
+    
+    /**
+     * Delete dialog_node associated with a workspace.
+     *
+     * @param $workspace_id string
+     * @param $dialog_node string
+     * @return HttpResponse
+     */
+    public function deleteDialogNode($workspace_id, $dialog_node, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_DELETE);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/dialog_nodes/".$dialog_node);
+        
+        return $this->sendRequest($config);
+    }
 }
