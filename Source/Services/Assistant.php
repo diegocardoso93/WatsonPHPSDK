@@ -1203,4 +1203,36 @@ class Assistant extends WatsonService {
         
         return $this->sendRequest($config);
     }
+    
+    /**
+     * List the logs for a workspace.
+     *
+     * @param $workspace_id string
+     * @return HttpResponse
+     */
+    public function listLogs($workspace_id, $sort = NULL, $filter = NULL, $page_limit = NULL, $cursor = NULL, $version = self::VERSION) {
+        
+        $config = $this->initConfig();
+        
+        $config->setQuery([ 'version' => $version ]);
+        
+        if(is_null($sort) === FALSE) {
+            $config->addQuery('sort', $sort);
+        }
+        if(is_null($filter) === FALSE) {
+            $config->addQuery('filter', $filter);
+        }
+        if(is_null($page_limit) === FALSE && is_integer($page_limit)) {
+            $config->addQuery('page_limit', $page_limit);
+        }
+        if(is_null($cursor) === FALSE) {
+            $config->addQuery('cursor', $cursor);
+        }
+        
+        $config->setMethod(HttpClientConfiguration::METHOD_GET);
+        $config->setType(HttpClientConfiguration::DATA_TYPE_JSON);
+        $config->setURL(self::BASE_URL."/workspaces/".$workspace_id."/logs");
+        
+        return $this->sendRequest($config);
+    }
 }
