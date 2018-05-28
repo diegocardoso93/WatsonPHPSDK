@@ -95,7 +95,7 @@ class MessageRequestModel extends ServiceModel {
      * @param RuntimeIntent | NULL $intents
      * @param OutputDataModel | NULL $output
      */
-    function __construct($input, $alternate_intents = NULL, ContextModel $context = NULL, array $entities = NULL, array $intents = NULL, OutputDataModel $output = NULL) {
+    function __construct($input, $alternate_intents = NULL, $context = NULL, array $entities = NULL, array $intents = NULL, OutputDataModel $output = NULL) {
 
         if(is_string($input)) {
             $input = new InputDataModel($input);
