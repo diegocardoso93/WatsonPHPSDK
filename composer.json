@@ -1,5 +1,5 @@
 {
-    "name": "sinf/watsonphpsdk",
+    "name": "sinfdesenv/watsonphpsdk",
     "description": "PHP SDK for Watson so that the developer could apply Watson quickly in PHP applications",
     "keywords": [
         "ai",
@@ -9,7 +9,7 @@
             ],
     "authors": [
         {
-            "name": "sinf",
+            "name": "sinfdesenv",
             "email": "watson@unisc.br"
         }
     ],
